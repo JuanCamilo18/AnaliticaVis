@@ -1,0 +1,82 @@
+---
+title: "Analisis de los datasets de Walmart"
+author: "Juan Camilo"
+date: "2023-02-18"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_download: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#[color](https://htmlcolorcodes.com/) pagina colores
+```
+
+## <img src = "https://www.ecommercenews.pe/wp-content/uploads/2022/06/Walmart-destaca-que-la-inflacion-cambio-la-forma-de-comprar-en-las-personas-1.jpg">
+
+## <span style = "color : #1135EC"> **Walmart** </span>
+
+## <span style = "color : #409421"> Importar los datos </span>
+
+```{r CargarDatos}
+#setwd("")
+stores <- read.csv("datos/stores.csv")
+features <- read.csv("datos/features.csv")
+train <- read.csv("datos/train.csv")
+test <- read.csv("datos/test.csv")
+```
+
+
+## <span style = "color : #409421"> Modulos </span>
+
+```{r CargarModulos, message=F}
+library(tidyverse)
+```
+
+
+## <span style = "color : #409421"> Primeros pasos con los datos </span>
+
+Mostremos un resumen de los datos de `stores`
+```{r}
+summary(stores)
+```
+
+Deseo contar el número de observaciones de cada nivel de la varible `Type`
+
+  * [Documentacion count](https://dplyr.tidyverse.org/)
+  
+```{r NumValuesType}
+count(stores, Type, sort = TRUE)
+```
+
+
+Promedio de tamaño por Type
+
+```{r}
+stores %>%
+  group_by(Type) %>%
+  summarize(PromSize = mean(Size))
+```
+
+Grafico
+
+```{r}
+stores %>%
+  group_by(Type) %>%
+  summarize(PromSize = mean(Size)) %>%
+  ggplot(mapping = aes(x = Type, y = PromSize)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(x="Tipo",y= "Promedio Size")  +              
+  #ylim(c(0,300)) +
+  ggtitle("Diagrama de barras")  +
+  geom_text(aes(label = round(PromSize,2)), vjust = -0.3) +
+  facet_wrap(~"Variable Size") 
+```
+
+***
+```{r include=FALSE}
+# https://rpubs.com/hllinas/R_Barras_ggplot_univariada
+# https://elartedeldato.com/blog/como-cambiar-el-estilo-de-los-ejes-de-las-etiquetas-de-los-ejes-en-ggplot/
+```
